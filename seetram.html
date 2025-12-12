@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Formulaire Demande Abonnement DOU - SETRAM (Recréation)</title>
+<style>
+  :root{
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --accent:#0077c8;
+    --muted:#6b7280;
+    --danger:#d9534f;
+    --radius:10px;
+  }
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color:#111827;
+    line-height:1.4;
+    padding:24px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:900px;
+    margin:0 auto;
+  }
+
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:20px;
+    box-shadow:0 10px 30px rgba(2,6,23,0.08);
+  }
+
+  .header{
+    display:flex;
+    gap:16px;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:12px;
+  }
+  .brand{
+    display:flex;
+    gap:12px;
+    align-items:center;
+  }
+  .brand img{height:56px; width:auto; border-radius:6px; object-fit:contain;}
+  h1{font-size:20px;margin:0}
+  .lang-switch{display:flex;gap:8px; align-items:center;}
+  .lang-switch button{
+    border:1px solid #d1d5db;
+    background:white;
+    padding:8px 12px;
+    cursor:pointer;
+    border-radius:8px;
+  }
+  .lang-switch button.active{background:var(--accent); color:#fff; border-color:var(--accent);}
+
+  form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  label{font-weight:600;font-size:13px; display:block; margin-bottom:6px;}
+  .full{grid-column:1 / -1}
+  input[type="text"], input[type="email"], input[type="tel"], select, input[type="file"]{
+    width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e5e7eb; font-size:14px;
+  }
+  .hint{font-size:13px;color:var(--muted); margin-top:6px;}
+  .photo-area{display:flex; gap:12px; align-items:flex-start;}
+  .photo-preview{
+    width:160px; height:200px; border-radius:8px; border:1px dashed #e6eef8; display:flex;
+    align-items:center; justify-content:center; overflow:hidden; background:#fbfdff;
+  }
+  .photo-preview img{width:100%; height:100%; object-fit:cover;}
+  .photo-instructions{font-size:13px; color:var(--muted);}
+
+  button[type="submit"]{
+    grid-column:1 / -1;
+    padding:12px 16px; background:var(--accent); color:#fff; font-weight:700;
+    border:none; border-radius:10px; cursor:pointer; font-size:16px;
+  }
+  button[type="submit"]:disabled{opacity:0.6; cursor:not-allowed}
+
+  .errors{color:var(--danger); font-size:13px; margin-top:4px;}
+
+  /* Responsive */
+  @media (max-width:760px){
+    form{grid-template-columns:1fr}
+    .photo-preview{width:120px; height:150px}
+  }
+
+  /* Arabic RTL adjustments when needed */
+  [dir="rtl"] .header{flex-direction:row-reverse}
+  [dir="rtl"] .brand{flex-direction:row-reverse}
+  [dir="rtl"] form{direction:rtl}
+  .required-star{color:var(--danger); margin-left:6px}
+
+  /* small footer */
+  .small{font-size:13px;color:var(--muted); margin-top:10px;}
+  a.inline{color:var(--accent); text-decoration:none;}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div id="pageCard" class="card" dir="ltr">
+    <div class="header">
+      <div class="brand">
+        <!-- Replace src with the real SETRAM logo URL or local path -->
+        <img id="logo" src="logo_setram.png">
+        <div>
+          <h1 id="title">Formulaire Demande Abonnement DOU</h1>
+          <div id="subtitle" style="color:var(--muted); font-size:13px;">Veuillez remplir tous les champs obligatoires marqués d'un astérisque (*)</div>
+        </div>
+      </div>
+
+      <div class="lang-switch" aria-hidden>
+        <button id="btn-fr" class="active" type="button">Français</button>
+        <button id="btn-ar" type="button">العربية</button>
+      </div>
+    </div>
+
+    <form id="douForm" novalidate>
+      <!-- First name -->
+      <div>
+        <label id="label-prenom">Prénom <span class="required-star">*</span></label>
+        <input type="text" id="prenom" name="prenom" required autocomplete="given-name" />
+        <div class="errors" id="err-prenom" aria-live="polite"></div>
+      </div>
+
+      <!-- Last name -->
+      <div>
+        <label id="label-nom">Nom <span class="required-star">*</span></label>
+        <input type="text" id="nom" name="nom" required autocomplete="family-name" />
+        <div class="errors" id="err-nom"></div>
+      </div>
+
+      <!-- Email -->
+      <div class="full">
+        <label id="label-email">Adresse e-mail <span class="required-star">*</span></label>
+        <input type="email" id="email" name="email" required placeholder="example@email.com" />
+        <div class="errors" id="err-email"></div>
+      </div>
+
+      <!-- Matricule -->
+      <div>
+        <label id="label-matricule">Matricule (sans année du bac au début) <span class="required-star">*</span></label>
+        <input type="text" id="matricule" name="matricule" required placeholder="Ex: 123456" />
+        <div class="errors" id="err-matricule"></div>
+      </div>
+
+      <!-- Année du Bac -->
+      <div>
+        <label id="label-annee">Année du Baccalauréat <span class="required-star">*</span></label>
+        <input type="text" id="annee_bac" name="annee_bac" inputmode="numeric" maxlength="4" required placeholder="YYYY" />
+        <div class="errors" id="err-annee"></div>
+      </div>
+
+      <!-- Phone -->
+      <div>
+        <label id="label-phone">Numéro de téléphone <span class="required-star">*</span></label>
+        <input type="tel" id="telephone" name="telephone" required placeholder="0512345678" inputmode="tel" />
+        <div class="errors" id="err-phone"></div>
+      </div>
+
+      <!-- University select - full list for Algiers (universities + higher schools) -->
+      <div class="full">
+        <label id="label-univ">Université / École supérieure <span class="required-star">*</span></label>
+        <select id="universite" name="universite" required>
+          <option value="">-- Sélectionnez une université / école --</option>
+
+          <!-- Major Universities -->
+          <optgroup label="Universités (Alger)">
+            <option>Université d'Alger 1 (Benyoucef Benkhedda)</option>
+            <option>Université d'Alger 2 (Abou El Kacem Saadallah)</option>
+            <option>Université d'Alger 3 (Ibrahim Sultan Cheibout)</option>
+            <option>Université des Sciences et de la Technologie Houari Boumediene (USTHB)</option>
+            <option>Université de la Formation Continue (UFC)</option>
+            <option>Université des Sciences de la Santé - Youcef El Khatib</option>
+          </optgroup>
+
+          <!-- National Higher Schools / Grandes écoles -->
+          <optgroup label="Écoles / Instituts Supérieurs (Alger)">
+            <option>École Nationale Polytechnique (ENP)</option>
+            <option>École Nationale Supérieure d'Informatique (ESI / ex-INI)</option>
+            <option>École Nationale Supérieure des Travaux Publics (ENSTP)</option>
+            <option>École Nationale Supérieure de Statistique et d'Économie Appliquée (ENSSEA)</option>
+            <option>École Normale Supérieure (ENS Kouba)</option>
+            <option>École Nationale Supérieure des Mines / Techniques (ENM - Alger)</option>
+            <option>École Nationale Supérieure d'Agronomie (ENSA - Alger)</option>
+            <option>École Nationale Supérieure Vétérinaire (ENV)</option>
+            <option>École Nationale Supérieure de Journalisme et Sciences de l'Information</option>
+            <option>École Supérieure de Commerce (ESC - Alger)</option>
+            <option>Institut National de Formation en Télécommunications / Institut des Télécoms</option>
+            <option>École Nationale Supérieure d'Architecture (ENSA)</option>
+            <option>École Supérieure d'Hôtellerie et de Restauration (ESHRA)</option>
+            <option>Institut Supérieur de Gestion / Institut des Hautes Études Commerciales (selon centres)</option>
+            <option>École Nationale Supérieure d'Électronique / Télécommunications</option>
+            <option>Institut Agronomique / Facultés spécialisées (divers)</option>
+          </optgroup>
+
+          <!-- Other well-known Algiers institutions -->
+          <optgroup label="Autres (Alger)">
+            <option>Faculté de Droit et des Sciences Politiques (Université d'Alger)</option>
+            <option>Centre Universitaire et Instituts rattachés (ex. Bouzaréah etc.)</option>
+            <option>Instituts et écoles privés accrédités (HIS, IS, etc.)</option>
+          </optgroup>
+
+        </select>
+        <div class="errors" id="err-univ"></div>
+      </div>
+
+      <!-- Photo upload -->
+      <div class="full">
+        <label id="label-photo">Photo d'identité <span class="required-star">*</span></label>
+
+        <div class="photo-area">
+          <div class="photo-preview" id="photoPreview" aria-hidden>
+            <span id="previewText">Aperçu</span>
+          </div>
+
+          <div style="flex:1;">
+            <input type="file" id="photo" name="photo" accept="image/jpeg,image/png" required>
+            <div class="hint" id="photo-hint">
+              JPEG/PNG — taille maximale 3 MB. <br>
+              Exemple : gros-plan du visage, fond clair, visage bien centré (voir l'exemple).
+            </div>
+
+            <!-- Example image (replace with a real tutorial image showing how to take the headshot close-up) -->
+            <div style="margin-top:10px;">
+              <img id="photoExample" src="photo_required.jpg" alt="Exemple format de photo d'identité" style="max-width:280px; border-radius:8px; border:1px solid #eef2f7;">
+              <div class="hint" style="margin-top:6px;">Photo : visage en gros-plan, yeux visibles, fond uni.</div>
+            </div>
+
+            <div class="errors" id="err-photo"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="full">
+        <button type="submit" id="submitBtn">Soumettre ma demande</button>
+        <div class="small">En cas de problème, demande d'information ou modification, veuillez contacter le service client SETRAM via leur site officiel.</div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+/* ---------------------------
+  Bilingual strings (FR / AR)
+---------------------------- */
+const STRINGS = {
+  fr: {
+    title: "Formulaire Demande Abonnement DOU",
+    subtitle: "Veuillez remplir tous les champs obligatoires marqués d'un astérisque (*)",
+    labels: {
+      prenom: "Prénom",
+      nom: "Nom",
+      email: "Adresse e-mail",
+      matricule: "Matricule (sans année du bac au début)",
+      annee: "Année du Baccalauréat",
+      phone: "Numéro de téléphone",
+      univ: "Université / École supérieure",
+      photo: "Photo d'identité",
+      submit: "Soumettre ma demande",
+      photoHint: "JPEG/PNG — taille maximale 3 MB. Visage en gros-plan, fond uni."
+    },
+    errors: {
+      required: "Ce champ est obligatoire.",
+      email: "Adresse e-mail invalide.",
+      annee: "Entrez une année à 4 chiffres (ex: 2024).",
+      phone: "Entrez un numéro de téléphone valide (chiffres seulement).",
+      photoType: "Format invalide. Seuls JPEG et PNG sont acceptés.",
+      photoSize: "La photo dépasse la taille maximale de 3 MB."
+    },
+    previewText: "Aperçu",
+    exampleAlt: "Exemple format de photo d'identité"
+  },
+
+  ar: {
+    title: "طلب اشتراك DOU",
+    subtitle: "يرجى ملء جميع الحقول الإلزامية المشار إليها بعلامة (*)",
+    labels: {
+      prenom: "الاسم",
+      nom: "اللقب",
+      email: "البريد الإلكتروني",
+      matricule: "الرقم الجامعي (بدون سنة الباك في البداية)",
+      annee: "سنة البكالوريا",
+      phone: "رقم الهاتف",
+      univ: "الجامعة / المدرسة العليا",
+      photo: "صورة الهوية",
+      submit: "إرسال الطلب",
+      photoHint: "JPEG/PNG — الحجم الأقصى 3 ميغابايت. صورة مقربة للوجه، خلفية واضحة."
+    },
+    errors: {
+      required: "هذا الحقل مطلوب.",
+      email: "عنوان البريد الإلكتروني غير صالح.",
+      annee: "أدخل سنة مكوّنة من 4 أرقام (مثال: 2024).",
+      phone: "أدخل رقم هاتف صالح (أرقام فقط).",
+      photoType: "تنسيق غير مدعوم. يقبل فقط JPEG و PNG.",
+      photoSize: "حجم الصورة يتجاوز 3 ميغابايت."
+    },
+    previewText: "معاينة",
+    exampleAlt: "مثال لصيغة صورة الهوية"
+  }
+};
+
+/* ---------------------------
+  Helpers & DOM refs
+---------------------------- */
+const pageCard = document.getElementById('pageCard');
+const btnFR = document.getElementById('btn-fr');
+const btnAR = document.getElementById('btn-ar');
+const titleEl = document.getElementById('title');
+const subtitleEl = document.getElementById('subtitle');
+const preview = document.getElementById('photoPreview');
+const previewText = document.getElementById('previewText');
+const photoInput = document.getElementById('photo');
+const previewImg = document.createElement('img');
+const previewTextEl = previewText;
+preview.appendChild(previewImg);
+previewImg.style.display = 'none';
+const submitBtn = document.getElementById('submitBtn');
+
+let currentLang = 'fr';
+setLanguage('fr');
+
+/* Language switching */
+btnFR.addEventListener('click', ()=> setLanguage('fr'));
+btnAR.addEventListener('click', ()=> setLanguage('ar'));
+
+function setLanguage(lang){
+  currentLang = lang;
+  // active button
+  btnFR.classList.toggle('active', lang==='fr');
+  btnAR.classList.toggle('active', lang==='ar');
+
+  // direction
+  if(lang==='ar'){ pageCard.setAttribute('dir','rtl'); } else { pageCard.setAttribute('dir','ltr'); }
+
+  // set texts
+  const s = STRINGS[lang];
+  titleEl.textContent = s.title;
+  subtitleEl.textContent = s.subtitle;
+  document.getElementById('label-prenom').childNodes[0].nodeValue = s.labels.prenom + ' ';
+  document.getElementById('label-nom').childNodes[0].nodeValue = s.labels.nom + ' ';
+  document.getElementById('label-email').childNodes[0].nodeValue = s.labels.email + ' ';
+  document.getElementById('label-matricule').childNodes[0].nodeValue = s.labels.matricule + ' ';
+  document.getElementById('label-annee').childNodes[0].nodeValue = s.labels.annee + ' ';
+  document.getElementById('label-phone').childNodes[0].nodeValue = s.labels.phone + ' ';
+  document.getElementById('label-univ').childNodes[0].nodeValue = s.labels.univ + ' ';
+  document.getElementById('label-photo').childNodes[0].nodeValue = s.labels.photo + ' ';
+  submitBtn.textContent = s.labels.submit;
+  document.getElementById('photo-hint').textContent = s.labels.photoHint;
+  previewTextEl.textContent = s.previewText;
+  document.getElementById('photoExample').alt = s.exampleAlt;
+}
+
+/* ---------------------------
+  Input restrictions & validation
+---------------------------- */
+// Only numbers in year (max 4)
+const anneeInput = document.getElementById('annee_bac');
+anneeInput.addEventListener('input', () => {
+  anneeInput.value = anneeInput.value.replace(/\D/g,'').slice(0,4);
+});
+
+// Only digits for phone
+const phoneInput = document.getElementById('telephone');
+phoneInput.addEventListener('input', () => {
+  phoneInput.value = phoneInput.value.replace(/\D/g,'');
+});
+
+// Matricule: disallow spaces at start
+const matriculeInput = document.getElementById('matricule');
+matriculeInput.addEventListener('input', () => {
+  // optional: strip leading spaces
+  matriculeInput.value = matriculeInput.value.replace(/^\s+/,'');
+});
+
+/* Photo preview and size/type validation */
+photoInput.addEventListener('change', function(){
+  const file = this.files[0];
+  clearError('photo');
+  if(!file){
+    resetPreview();
+    return;
+  }
+  // Type check
+  if(!/image\/(jpeg|png)/.test(file.type)){
+    setError('photo', STRINGS[currentLang].errors.photoType);
+    this.value = '';
+    resetPreview();
+    return;
+  }
+  // Size check (3 MB)
+  if(file.size > 3 * 1024 * 1024){
+    setError('photo', STRINGS[currentLang].errors.photoSize);
+    this.value = '';
+    resetPreview();
+    return;
+  }
+
+  // show preview
+  const reader = new FileReader();
+  reader.onload = function(e){
+    previewImg.src = e.target.result;
+    previewImg.style.display = '';
+    previewTextEl.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+});
+
+/* Reset preview */
+function resetPreview(){
+  previewImg.src = '';
+  previewImg.style.display = 'none';
+  previewTextEl.style.display = '';
+}
+
+/* ---------------------------
+  Form submission & validation
+---------------------------- */
+const form = document.getElementById('douForm');
+
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+  clearAllErrors();
+
+  const s = STRINGS[currentLang];
+
+  // Basic required checks
+  let valid = true;
+
+  // text inputs
+  if(!document.getElementById('prenom').value.trim()){ setError('prenom', s.errors.required); valid=false; }
+  if(!document.getElementById('nom').value.trim()){ setError('nom', s.errors.required); valid=false; }
+
+  // email
+  const em = document.getElementById('email').value.trim();
+  if(!em){ setError('email', s.errors.required); valid=false; }
+  else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ setError('email', s.errors.email); valid=false; }
+
+  // matricule
+  if(!document.getElementById('matricule').value.trim()){ setError('matricule', s.errors.required); valid=false; }
+
+  // year
+  const year = anneeInput.value.trim();
+  if(!year){ setError('annee', s.errors.required); valid=false; }
+  else if(!/^\d{4}$/.test(year) || Number(year) < 1900 || Number(year) > 2099){ setError('annee', s.errors.annee); valid=false; }
+
+  // phone
+  const phone = phoneInput.value.trim();
+  if(!phone){ setError('phone', s.errors.required); valid=false; }
+  else if(!/^\d{6,15}$/.test(phone)){ setError('phone', s.errors.phone); valid=false; }
+
+  // university
+  if(!document.getElementById('universite').value){ setError('univ', s.errors.required); valid=false; }
+
+  // photo file
+  const file = photoInput.files[0];
+  if(!file){ setError('photo', s.errors.required); valid=false; }
+
+  if(!valid){
+    // Focus first error
+    const firstErr = document.querySelector('.errors:not(:empty)');
+    if(firstErr) firstErr.previousElementSibling.focus?.();
+    return;
+  }
+
+  // At this point, client validation passed. Prepare data for submission.
+  // NOTE: This is a front-end only demo. Replace with your own backend endpoint.
+  submitBtn.disabled = true;
+  submitBtn.textContent = currentLang === 'fr' ? 'Envoi...' : 'جاري الإرسال...';
+
+  // Build FormData to send via fetch to backend
+  const fd = new FormData();
+  fd.append('prenom', document.getElementById('prenom').value.trim());
+  fd.append('nom', document.getElementById('nom').value.trim());
+  fd.append('email', em);
+  fd.append('matricule', document.getElementById('matricule').value.trim());
+  fd.append('annee_bac', year);
+  fd.append('telephone', phone);
+  fd.append('universite', document.getElementById('universite').value);
+  fd.append('photo', file);
+
+  // Demo: show a confirmation (in real use, POST fd to your server)
+  setTimeout(()=>{
+    alert(currentLang==='fr' ? 'Formulaire validé ! (Intégrez votre backend pour envoyer les données.)' : 'تم التحقق من النموذج! (أدرج الخادم الخاص بك لإرسال البيانات.)');
+    submitBtn.disabled = false;
+    submitBtn.textContent = STRINGS[currentLang].labels.submit;
+    form.reset();
+    resetPreview();
+  }, 700);
+});
+
+/* ---------------------------
+  Error helper functions
+---------------------------- */
+function setError(fieldShort, message){
+  const map = {
+    prenom: 'err-prenom',
+    nom: 'err-nom',
+    email: 'err-email',
+    matricule: 'err-matricule',
+    annee: 'err-annee',
+    phone: 'err-phone',
+    univ: 'err-univ',
+    photo: 'err-photo'
+  };
+  const el = document.getElementById(map[fieldShort]);
+  if(el) el.textContent = message;
+}
+function clearError(fieldShort){
+  const map = {
+    photo:'err-photo'
+  };
+  const id = map[fieldShort];
+  if(id) document.getElementById(id).textContent = '';
+}
+function clearAllErrors(){
+  ['err-prenom','err-nom','err-email','err-matricule','err-annee','err-phone','err-univ','err-photo'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.textContent='';
+  });
+}
+
+/* Initialize preview area text according to language */
+previewTextEl.textContent = STRINGS[currentLang].previewText;
+
+</script>
+</body>
+</html>
